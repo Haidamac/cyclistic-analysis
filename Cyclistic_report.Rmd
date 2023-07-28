@@ -1,0 +1,336 @@
+---
+title: "Cyclistic_report"
+author: "Sergii Krynytsia"
+date: "2023-07-27"
+output: html_document
+---
+
+# Cyclistic: How Does a Bike-Share Navigate Speedy Success?
+
+![](https://user-images.githubusercontent.com/98569224/172212218-1bc87981-9b94-4d5e-bd1e-1908c02ff98d.png)
+
+## Table of Content
+* [Ask](#1-ask)
+* [Prepare](#2-prepare)
+* [Process](#3-process)
+* [Analyze](#4-analyze)
+* [Share](#5-share)
+* [Act](#6-act)
+
+
+### 1. Ask {#1-ask}
+
+**Business task**
+
+Analyze and understand how casual riders and annual members use Cyclistic bikes differently in order to design a new marketing strategy to convert casual riders into annual members
+
+**Stakeholders**
+
+* The director of marketing of Cyclistic *Lily Moreno*
+* Cyclistic marketing analytics team
+* Cyclistic executive team
+
+
+### 2. Prepare {#2-prepare}
+
+**Data source**
+
+Cyclistic’s historical trip data: last 12 months from July 2022 to June 2023
+link to data source: <https://divvy-tripdata.s3.amazonaws.com/index.html>
+
+**Data organize**
+
+Monthly csv-files contains metadata for Bike Trips
+Metadata for Trips:
+
+*Variables*:
+
+* ride_id: ID attached to each trip taken
+* rideable_type: type of vehicle (classic bike/electric bike/docked bike)
+* started_at: day and time trip started, in CST
+* ended_at: day and time trip ended, in CST
+* start_station_name: name of station where trip originated
+* end_station_name: name of station where trip terminated 
+* start_station_id: ID of station where trip originated
+* end_station_id: ID of station where trip terminated
+* start_lat: latitude of station where trip originated coordinates
+* start_lng: longitude of station where trip originated coordinates
+* end_lat: latitude of station where trip terminated coordinates
+* end_lng: longitude of station where trip terminated coordinates
+* member_casual: "casual" is a rider who purchased a 24-Hour Pass; "member" is a rider who purchased an Annual Membership
+
+
+*Notes*:
+
+* First row contains column names
+* 202207-divvy-tripdata.csv has 823,488 rows
+* 202208-divvy-tripdata.csv has 785,932 rows
+* 202209-divvy-publictripdata.csv has 701,339 rows
+* 202210-divvy-tripdata.csv has 558,685 rows
+* 202211-divvy-tripdata.csv has 337,735 rows
+* 202212-divvy-tripdata.csv has 181,806 rows
+* 202301-divvy-tripdata.csv has 190,301 rows
+* 202302-divvy-tripdata.csv has 190,445 rows
+* 202303-divvy-tripdata.csv has 258,678 rows
+* 202304-divvy-tripdata.csv has 426,590 rows
+* 202305-divvy-tripdata.csv has 604,827 rows
+* 202306-divvy-tripdata.csv has 719,618 rows
+
+**Bias and credibility in data**
+
+The data is reliable, original, comprehensive, current and cited
+
+**Licensing**
+
+The data has been made available by Motivate International Inc. 
+under this [license](https://ride.divvybikes.com/data-license-agreement)
+
+**Load packages**
+
+Set of packages for data tidying, manipulation and visualization:
+```{r}
+library(tidyverse)
+```
+for dates and times functions:
+```{r}
+library(lubridate)
+```
+for summaries of data:
+```{r}
+library(skimr)
+```
+and for scale function for visualization:
+```{r}
+library(scales)
+```
+
+
+**Collect data**
+
+Import csv-files into temporary data-frames:
+```{r}
+setwd("C:/Users/Haidamac/Documents")
+td202207 <- read.csv("202207-divvy-tripdata.csv")
+td202208 <- read.csv("202208-divvy-tripdata.csv")
+td202209 <- read.csv("202209-divvy-publictripdata.csv")
+td202210 <- read.csv("202210-divvy-tripdata.csv")
+td202211 <- read.csv("202211-divvy-tripdata.csv")
+td202212 <- read.csv("202212-divvy-tripdata.csv")
+td202301 <- read.csv("202301-divvy-tripdata.csv")
+td202302 <- read.csv("202302-divvy-tripdata.csv")
+td202303 <- read.csv("202303-divvy-tripdata.csv")
+td202304 <- read.csv("202304-divvy-tripdata.csv")
+td202305 <- read.csv("202305-divvy-tripdata.csv")
+td202306 <- read.csv("202306-divvy-tripdata.csv")
+```
+
+Merge monthly temporary data-frames in single data-frame:
+```{r}
+trip_data <- rbind(td202207,td202208,td202209,td202210,td202211,td202212,
+                   td202301,td202302,td202303,td202304,td202305,td202306)
+```
+
+Check structure of data frame:
+```{r}
+str(trip_data)
+```
+Data frame contains 5773649 observations of 13 variables
+
+Check names of variable:
+```{r}
+colnames(trip_data)
+```
+Data frame contains 13 variables according to metadata description
+
+Check 6 first records of data frame:
+```{r}
+head(trip_data)
+```
+
+Therefore, the composition of the data and the sample are sufficient to achieve the goal of the analysis
+
+### 3. Process {#3-process}
+
+**Tools for analysis**
+
+R (RStudio) with tinyverse packages are used
+
+**Clean data**
+
+Key tasks:
+
+* Duplicate records in data frame should be excluded
+* Rides with n/a data and missing data should be excluded
+* Rides that did not include a start or end station should be excluded
+
+Check number of rows before cleaning:
+```{r}
+rows_before <- nrow(trip_data)
+```
+
+Check data frame for N/A records:
+```{r}
+na_records <- is.na(trip_data)
+na_count_per_column <- colSums(na_records)
+total_na_count <- sum(na_records)
+```
+Data frame contains 11590 N/A records
+
+Drop N/A:
+```{r}
+trip_data <- drop_na(trip_data)
+```
+
+Check for duplicate ride_ids:
+```{r}
+anyDuplicated(trip_data$ride_id)
+```
+Data frame contains no duplicate records
+
+Clean all missing values:
+```{r}
+trip_data <- trip_data[!(trip_data$start_station_name == "" |
+                           trip_data$start_station_id == "" |
+                           trip_data$end_station_name == "" |
+                           trip_data$end_station_id == "" ),]
+```
+
+Check number of row after cleaning:
+```{r}
+rows_after <- nrow(trip_data)
+```
+
+Number of removed rows during cleaning:
+```{r}
+print(paste("Removed", rows_before - rows_after, " rows during cleaning"))
+```
+So, removed 1364560 rows, but the remaining sample of 4,409,089 observations is sufficient for the analysis
+
+**Transform data**
+
+Key tasks:
+
+* Check data for the correct datatype
+* Add and calculate necessary columns for further analysis
+* Rides less than 1 minute in duration should be excluded
+* Rides greater than 24 hours in duration should be excluded
+
+Check of properly data format:
+```{r}
+summary(trip_data)
+```
+Variables _started_at_ and _ended_at_ have _character_ but need _datetime_
+
+Convert this columns in datetime format:
+```{r}
+trip_data$started_at <- ymd_hms(trip_data$started_at)
+trip_data$ended_at <- ymd_hms(trip_data$ended_at)
+```
+
+Check of properly data format again:
+```{r}
+skim(trip_data)
+```
+
+Add _duration_ column (duration of each ride in seconds) for further analysis:
+```{r}
+trip_data$duration <- as.numeric(trip_data$ended_at - trip_data$started_at, units = "secs")
+```
+And check new column for errors:
+```{r}
+skim(trip_data$duration)
+```
+We got some records with negative duration
+Create subset with records of negative duration only:
+```{r}
+negative_duration <- trip_data %>% 
+  filter(duration < 0)
+```
+Check dimension of subset:
+```{r}
+dim(negative_duration)
+```
+We have 76 records with negative duration
+Preview of subset:
+```{r}
+head(negative_duration)
+```
+6 first records with negative duration have same start and end station name.
+So, we assume the trip just didn't happen
+
+Same procedure for zero duration:
+```{r}
+zero_duration <- trip_data %>% 
+  filter(duration == 0)
+dim(zero_duration)
+```
+We have 263 records with duration in 0 second, therefor trips just didn't happen too
+
+We also need to search for trips lasting less than one minute, because this most likely indicates technical malfunctions during the bike rental and the refusal of further trips:
+```{r}
+short_duration <- trip_data %>% 
+  filter(duration < 60)
+dim(short_duration)
+```
+There are 90653 observations with ride duration less than 1 minute. 
+
+We also need to search for rides greater than 24 hours, because it probably indicates test rides
+```{r}
+long_duration <- trip_data %>% 
+  filter(duration > 86400)
+dim(long_duration)
+```
+There are 105 rides with long duration
+
+We need to clean our data from this records (negative, zero and short duration):
+```{r}
+trip_data <- trip_data[!(trip_data$duration < 60 | trip_data$duration > 86400),]
+```
+Data is ready for analysis
+
+
+### 4. Analyze {#4-analyze}
+
+Key tasks:
+* Aggregate data for rides distributions
+* Identify trends and relationships
+
+**Distribution of rides by user types**
+
+```{r}
+rd_usertype <- trip_data %>% 
+  group_by(member_casual) %>% 
+  summarize(count = length(member_casual), part_rides = (length(member_casual) / nrow(trip_data)) * 100 )
+
+print(rd_usertype)
+```
+So, we can see 61.9% all rides are made by members who purchased an Annual Membership and a little more than a third (38.1%) - by other users 
+
+
+
+
+### 5. Share {#5-share}
+
+**Distribution of rides by user types**
+```{r}
+pie <- ggplot(rd_usertype, aes(x='', y=part_rides, fill=member_casual))+
+  geom_bar(width = 1, stat = "identity") + 
+  coord_polar("y") +
+  scale_fill_brewer(palette="Pastel2") + 
+  theme(axis.text.x=element_blank()) +
+  geom_text(aes(label = percent(part_rides / 100)),
+            position = position_stack(vjust = 0.5), 
+            size = 5) +
+  labs(x= "", y= "", title = "Distribution of Rides by User Type")
+```
+
+```{r pie, echo=FALSE}
+plot(pie)
+```
+
+
+### 6. Act {#6-act}
+
+
+
+
