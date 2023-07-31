@@ -1067,7 +1067,7 @@ median_dayhour_plot <- ggplot(duration_dayhour, aes(dayhour, median, fill = memb
   labs(title = "The median ride duration by hours", x = "Hour of the Day", y = "Median")
 ```
 
-### Figure 12
+<a name="#figure12">Figure 12</a>
 
 ![](Cyclistic_report_files/figure-markdown_github/median_dayhour_plot-1.png)
 
