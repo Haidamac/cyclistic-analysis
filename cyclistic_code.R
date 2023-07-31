@@ -1,8 +1,10 @@
+# Load packages
 library(tidyverse)
 library(lubridate)
 library(skimr)
 library(scales)
 
+# Collect data
 td202207 <- read.csv("202207-divvy-tripdata.csv")
 td202208 <- read.csv("202208-divvy-tripdata.csv")
 td202209 <- read.csv("202209-divvy-publictripdata.csv")
@@ -16,37 +18,51 @@ td202304 <- read.csv("202304-divvy-tripdata.csv")
 td202305 <- read.csv("202305-divvy-tripdata.csv")
 td202306 <- read.csv("202306-divvy-tripdata.csv")
 
+# Merge monthly temporary data-frames in single data-frame
 trip_data <- rbind(td202207,td202208,td202209,td202210,td202211,td202212,
                    td202301,td202302,td202303,td202304,td202305,td202306)
 
+# Check structure of data frame
 str(trip_data)
+# Check names of variable
 colnames(trip_data)
+# Check 6 first records of data frame
 head(trip_data)
 
+# Check number of rows before cleaning
 rows_before <- nrow(trip_data)
 
+# Check data frame for N/A records
 na_records <- is.na(trip_data)
 na_count_per_column <- colSums(na_records)
 total_na_count <- sum(na_records)
 
+# Drop N/A
 trip_data <- drop_na(trip_data)
 
+# Check for duplicate ride_ids
 anyDuplicated(trip_data$ride_id)
 
+# Clean all missing values
 trip_data <- trip_data[!(trip_data$start_station_name == "" |
                            trip_data$start_station_id == "" |
                            trip_data$end_station_name == "" |
                            trip_data$end_station_id == "" ),]
 
+# Check number of row after cleaning
 rows_after <- nrow(trip_data)
 
+# Number of removed rows during cleaning
 print(paste("Removed", rows_before - rows_after, " rows during cleaning"))
 
+# Check of properly data format
 summary(trip_data)
 
+# Convert columns in datetime format
 trip_data$started_at <- ymd_hms(trip_data$started_at)
 trip_data$ended_at <- ymd_hms(trip_data$ended_at)
 
+# Check of properly data format again
 skim(trip_data)
 
 # add duration column
@@ -64,36 +80,42 @@ trip_data$dayhour <- hour(trip_data$started_at)
 # check new column for errors
 skim(trip_data)
 
+# Create subset with records of negative duration only
 negative_duration <- trip_data %>% 
   filter(duration < 0)
 
+# Check dimension of subset
 dim(negative_duration)
+# Preview of subset
 head(negative_duration)
 
+# Same procedure for zero duration
 zero_duration <- trip_data %>% 
   filter(duration == 0)
 dim(zero_duration)
 head(zero_duration)
 
+# Same procedure for short duration < 1'
 short_duration <- trip_data %>% 
   filter(duration < 60)
 dim(short_duration)
 
+# Same procedure for long duration > 24 h
 long_duration <- trip_data %>% 
   filter(duration > 86400)
 dim(long_duration)
 
+# clean data from negative, zero and short duration
 trip_data <- trip_data[!(trip_data$duration < 60 | trip_data$duration > 86400),]
 skim(trip_data$duration)
 
 # export cleaned data for Tableau
-#write.csv(trip_data, "trip_data.csv")
+write.csv(trip_data, "trip_data.csv")
 
 # Distribution of rides by user types
 rd_usertype <- trip_data %>% 
   group_by(member_casual) %>% 
   summarise(count = length(member_casual), part_rides = (length(member_casual) / nrow(trip_data)) * 100 )
-
 print(rd_usertype)
 
 # Piechart of distribution of rides by user type
@@ -196,7 +218,7 @@ member_rd_dayhour <- trip_data %>%
 member_rd_dayhour %>% 
   summarise(mean(count),sd(count))
 
-# Bar plot of distribution of rides by user types and day of week
+# Bar plot of distribution of rides by user types and hour of day
 rd_dayhour_plot <- ggplot(rd_dayhour, aes(dayhour, count, fill = member_casual)) +
   geom_area(position = "dodge") +  scale_fill_brewer(palette="Set2") +
   labs(title = "The number of rides by hour of day", x = "Hour of day", y = "Number of rides") +
@@ -212,6 +234,15 @@ print(rd_rideable_type)
 rd_rideable_plot <- ggplot(rd_rideable_type, aes(member_casual, count, fill = rideable_type)) +
   geom_col(position = "dodge") +  scale_fill_brewer(palette="Set2") +
   labs(title = "The number of rides by type of vehicle", x = "Type of vehicle", y = "Number of rides")
+
+#Distribution of rides by user types and start station
+rd_station <- trip_data %>% 
+  group_by(member_casual, start_station_name) %>%
+  summarise(count = length(start_station_name), start_id = first(start_station_id),
+            .groups = "drop") %>% 
+  arrange(desc(count))
+print(rd_station)
+
 
 # Distribution of rides by user types and duration of ride
 rd_duration <- trip_data %>% 

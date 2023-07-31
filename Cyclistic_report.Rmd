@@ -1,8 +1,10 @@
 ---
 title: "Cyclistic_report"
 author: "Sergii Krynytsia"
-date: "2023-07-27"
-output: md_document
+date: "2023-07-31"
+output:
+  md_document:
+    variant: markdown_github
 ---
 
 # Cyclistic: How Does a Bike-Share Navigate Speedy Success?
@@ -316,7 +318,7 @@ rd_usertype <- trip_data %>%
 
 print(rd_usertype)
 ```
-So, we can see 61.9% all rides are made by members who purchased an Annual Membership and a little more than a third (38.1%) - by other users ([figure 1](#figure 1))
+So, we can see 61.9% all rides are made by members who purchased an Annual Membership and a little more than a third (38.1%) - by other users ([figure 1](#figure1))
 
 **Distribution of rides by user types and month**
 
@@ -347,7 +349,7 @@ member_rd_month %>%
   summarise(mean(count),sd(count))
 ```
 Therefore, the standard deviation for casual users (98516) is higher than the standard deviation for members (88568). Thus, seasonality is more pronounced for casual users.
-Demand is much lower in the winter months than in the summer. This is natural for bike trips. But for casual users this seasonality is more pronounced than for members ([figure 2](#figure 2))
+Demand is much lower in the winter months than in the summer. This is natural for bike trips. But for casual users this seasonality is more pronounced than for members ([figure 2](#figure2))
 
 **Distribution of rides by user types and day of the week**
 
@@ -377,7 +379,7 @@ member_rd_weekday %>%
   summarise(mean(count),sd(count))
 ```
 Therefore, the standard deviation for casual users (56145) is somewhat higher than the standard deviation for members (54021). 
-Demand is significantly higher in weekends for casual users. Thus, we can assume that they mainly use bicycle rental for recreation. Members, on the other hand, mostly use bike rental on weekdays, so we assume they use our service for commuting ([figure 3](#figure 3))
+Demand is significantly higher in weekends for casual users. Thus, we can assume that they mainly use bicycle rental for recreation. Members, on the other hand, mostly use bike rental on weekdays, so we assume they use our service for commuting ([figure 3](#figure3))
 
 **Distribution of rides by user types and hour of the day**
 
@@ -407,7 +409,7 @@ member_rd_dayhour %>%
   summarise(mean(count),sd(count))
 ```
 Therefore, the standard deviation for casual users (47885) is more lower than the standard deviation for members (79353). 
-Members have a clear preference for morning and evening bike rentals, supporting our assumption that they use bike commuting to and from the work. Whereas casual users use bike rental more evenly throughout the day ([figure 4](#figure 4))
+Members have a clear preference for morning and evening bike rentals, supporting our assumption that they use bike commuting to and from the work. Whereas casual users use bike rental more evenly throughout the day ([figure 4](#figure4))
 
 
 **Distribution of rides by user types and type of vehicle**
@@ -419,15 +421,21 @@ rd_rideable_type <- trip_data %>%
             .groups = "drop")
 print(rd_rideable_type)
 ```
-Casual users prefer both classic and electric bikes equally but sometimes choose docked bikes. Members prefer classic bikes, less - electric ones ([figure5](#figure 5)).
+Casual users prefer both classic and electric bikes equally but sometimes choose docked bikes. Members prefer classic bikes, less - electric ones ([figure 5](#figure5)).
 
+**Distribution of rides by user types and start/end station**
 
-**Distribution of rides by user types and start station**
+```{r}
+rd_station <- trip_data %>% 
+  group_by(member_casual, start_station_name) %>%
+  summarise(count = length(start_station_name), start_id = first(start_station_id),
+            .groups = "drop") %>% 
+  arrange(desc(count))
+print(rd_station)
+```
 
-
-
-**Distribution of rides by user types and end station**
-
+Bike rental stations preferred by casual users and members are also not equally distributed. While members rent bicycles in various parts of the city (preferring the city center), casual users are mainly near lake shore and other recreational areas ([figure 6](#figure6) and [figure 7](#figure7)).
+The most popular station for renting bicycles by casual users is Streeter Dr & Grand Ave (49 thousand rent during the year). The number of rentals is significantly lower at other popular rental stations (f.e. 28 thousand on DuSable Lake Shore Dr & Monroe St).
 
 
 **Distribution of rides by user types and duration of ride**
@@ -439,8 +447,8 @@ rd_duration <- trip_data %>%
             sd = sd(duration), median = median(duration), .groups = "drop")
 print(rd_duration)
 ```
-The average trip duration of a casual user is almost twice that of a member ([figure8](#figure 8))
-However, if we exclude the extreme values (median), this difference is no longer so significant ([figure9](#figure 9))
+The average trip duration of a casual user is almost twice that of a member ([figure 8](#figure8))
+However, if we exclude the extreme values (median), this difference is no longer so significant ([figure 9](#figure9))
 
 **Distribution of ride duration by user types and month**
 
@@ -451,7 +459,7 @@ duration_month <- trip_data %>%
             sd = sd(duration), median = median(duration), .groups = "drop")
 print(duration_month)
 ```
-The standard deviation of a casual user's ride duration is almost double that of a member. This is well illustrated by the chart of median trip duration by month ([figure10](#figure 10)). The difference in trip length for the casual user in the summer months is much greater than in the winter, while the difference is less noticeable for members. This supports our hypothesis that members mostly use bike rental for commuting, while casual users for leisure, this explains the seasonality.
+The standard deviation of a casual user's ride duration is almost double that of a member. This is well illustrated by the chart of median trip duration by month ([figure 10](#figure10)). The difference in trip length for the casual user in the summer months is much greater than in the winter, while the difference is less noticeable for members. This supports our hypothesis that members mostly use bike rental for commuting, while casual users for leisure, this explains the seasonality.
 
 **Distribution of ride duration by user types and day of the week**
 
@@ -463,7 +471,7 @@ duration_weekday <- trip_data %>%
 print(duration_weekday)
 ```
 
-The same hypothesis is confirmed by the analysis of the median duration of the ride by day of the week. For casual users it is significantly higher on weekends than on weekdays, while for members the difference is not as significant ([figure11](#figure 11)).
+The same hypothesis is confirmed by the analysis of the median duration of the ride by day of the week. For casual users it is significantly higher on weekends than on weekdays, while for members the difference is not as significant ([figure 11](#figure11)).
 
 **Distribution of ride duration by user types and hour of the day**
 
@@ -474,7 +482,7 @@ duration_dayhour <- trip_data %>%
             sd = sd(duration), median = median(duration), .groups = "drop")
 ```
 
-The duration of the members' trip is virtually independent of the time of day, while the dependence is significant for casual users: the longest trips are in the middle of the day, while the shortest are in the morning ([figure12](#figure 12))
+The duration of the members' trip is virtually independent of the time of day, while the dependence is significant for casual users: the longest trips are in the middle of the day, while the shortest are in the morning ([figure 12](#figure12))
 
 
 ### 5. Share {#5-share}
@@ -492,10 +500,12 @@ pie <- ggplot(rd_usertype, aes(x='', y=part_rides, fill=member_casual))+
   labs(x= "", y= "", title = "Distribution of Rides by User Type")
 ```
 
-{figure 1}
+#### Figure 1 {#figure1}
+
 ```{r pie, echo=FALSE}
 plot(pie)
 ```
+
 
 **Distribution of rides by user types and month**
 
@@ -505,7 +515,8 @@ rd_month_plot <- ggplot(rd_month, aes(month, count, fill = member_casual)) +
   labs(title = "The number of rides by month", x = "Month", y = "Number of rides")
 ```
 
-{figure 2}
+#### Figure 2 {#figure2}
+
 ```{r rd_month_plot, echo=FALSE}
 plot(rd_month_plot)
 ```
@@ -519,7 +530,8 @@ rd_weekday_plot <- ggplot(rd_weekday, aes(weekday, count, fill = member_casual))
   facet_wrap(~member_casual)
 ```
 
-{figure 3}
+#### Figure 3 {#figure3}
+
 ```{r rd_weekday_plot, echo=FALSE}
 plot(rd_weekday_plot)
 ```
@@ -533,10 +545,38 @@ rd_dayhour_plot <- ggplot(rd_dayhour, aes(dayhour, count, fill = member_casual))
   facet_wrap(~member_casual)
 ```
 
-{figure 4}
-```{r rd_weekday_plot, echo=FALSE}
+#### Figure 4 {#figure4}
+
+```{r rd_dayhour_plot, echo=FALSE}
 plot(rd_dayhour_plot)
 ```
+
+
+**Distribution of rides by user types and type of vehicle**
+
+```{r}
+rd_rideable_plot <- ggplot(rd_rideable_type, aes(member_casual, count, fill = rideable_type)) +
+  geom_col(position = "dodge") +  scale_fill_brewer(palette="Set2") +
+  labs(title = "The number of rides by type of vehicle", x = "Type of vehicle", y = "Number of rides")
+```
+
+#### Figure 5 {#figure5}
+
+```{r rd_rideable_plot, echo=FALSE}
+plot(rd_rideable_plot)
+```
+
+
+#### Figure 6 {#figure6}
+
+![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/start_station.png) 
+_figure build with [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticstartstationusage/Sheet1)_
+
+#### Figure 7 {#figure7}
+
+![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/end_station.png)
+_figure build with [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticendstationsusage/Sheet1)_
+
 
 **Distribution of ride mean duration by user types**
 ```{r}
@@ -551,12 +591,8 @@ mean_duration_plot <- ggplot(rd_duration, aes(x='', y=mean, fill=member_casual))
   labs(x= "", y= "", title = "Distribution of Mean Duration by User Type")
 ```
 
-{figure 5}
+#### Figure 8 {#figure8}
 
-
-
-
-{figure 8}
 ```{r mean_duration_plot, echo=FALSE}
 plot(mean_duration_plot)
 ```
@@ -575,7 +611,8 @@ median_duration_plot <- ggplot(rd_duration, aes(x='', y=median, fill=member_casu
   labs(x= "", y= "", title = "Distribution of Median Duration by User Type")
 ```
 
-{figure 9}
+#### Figure 9 {#figure9}
+
 ```{r median_duration_plot, echo=FALSE}
 plot(median_duration_plot)
 ```
@@ -587,7 +624,9 @@ median_month_plot <- ggplot(duration_month, aes(month, median, fill = member_cas
   geom_col(position = "dodge") +  scale_fill_brewer(palette="Set1") +
   labs(title = "The median ride duration by month", x = "Month", y = "Median")
 ```
-{figure 10}
+
+#### Figure 10 {#figure10}
+
 ```{r median_month_plot, echo=FALSE}
 plot(median_month_plot)
 ```
@@ -600,7 +639,9 @@ median_weekday_plot <- ggplot(duration_weekday, aes(weekday, median, fill = memb
   geom_col(position = "dodge") +  scale_fill_brewer(palette="Set1") +
   labs(title = "The median ride duration by days", x = "Days of the Week", y = "Median")
 ```
-{figure 11}
+
+#### Figure 11 {#figure11}
+
 ```{r median_weekday_plot, echo=FALSE}
 plot(median_weekday_plot)
 ```
@@ -614,13 +655,30 @@ median_dayhour_plot <- ggplot(duration_dayhour, aes(dayhour, median, fill = memb
   labs(title = "The median ride duration by hours", x = "Hour of the Day", y = "Median")
 ```
 
-{figure 12}
+#### Figure 12 {#figure12}
+
 ```{r median_dayhour_plot, echo=FALSE}
 plot(median_dayhour_plot)
 ```
 
 ### 6. Act {#6-act}
 
+**Key takeaways**
 
+* Casual users make slightly more than a third of all rides, but they have ride duration is significantly longer than that of members
+* Casual users have a significantly pronounced seasonality in bicycle rental. They prefer the summer months, while their activity is much lower in the winter. The largest number of trips is made from May to October. Average duration of rides is also longer in summer.
+* Casual users use bike rental mainly for leisure, so they prefer weekend bike trips. Average duration of rides is also longer on weekends
+* Casual users make the largest number of trips from 12:00 p.m. to 7:00 p.m. They make the longest duration trips from 10 a.m. to 7 p.m.
+* The most popular station for renting bicycles by casual users is Streeter Dr & Grand Ave. Other popular rental stations are located along lake shore.
+* Casual users no prefer bike type, they use both classic and electric bikes roughly equal
 
+**Recommendations**
+
+* The best time to launch the new marketing campaign is May
+* The best place for placing street advertising (citylights, billboards) is along the lake shore
+* The best duration of the advertising campaign is from May to October
+* The best time for advertising events is weekends from 12 p.m. to 7 p.m.
+* The best place for advertising events near Streeter Dr & Grand Ave station
+* The advertisement must use both a classic and an electric bicycle
+* Promotion of a healthy lifestyle and environmental protection should be used in advertising
 
