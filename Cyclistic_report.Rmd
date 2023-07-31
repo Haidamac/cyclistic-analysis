@@ -155,7 +155,7 @@ Therefore, the composition of the data and the sample are sufficient to achieve 
 
 **Tools for analysis**
 
-R (RStudio) with tinyverse packages are used
+R (RStudio) with tinyverse packages and Tableau are used
 
 **Clean data**
 
@@ -500,7 +500,7 @@ pie <- ggplot(rd_usertype, aes(x='', y=part_rides, fill=member_casual))+
   labs(x= "", y= "", title = "Distribution of Rides by User Type")
 ```
 
-#### Figure 1 {#figure1}
+### Figure 1 {#figure1}
 
 ```{r pie, echo=FALSE}
 plot(pie)
@@ -515,7 +515,7 @@ rd_month_plot <- ggplot(rd_month, aes(month, count, fill = member_casual)) +
   labs(title = "The number of rides by month", x = "Month", y = "Number of rides")
 ```
 
-#### Figure 2 {#figure2}
+### Figure 2 {#figure2}
 
 ```{r rd_month_plot, echo=FALSE}
 plot(rd_month_plot)
@@ -530,7 +530,7 @@ rd_weekday_plot <- ggplot(rd_weekday, aes(weekday, count, fill = member_casual))
   facet_wrap(~member_casual)
 ```
 
-#### Figure 3 {#figure3}
+### Figure 3 {#figure3}
 
 ```{r rd_weekday_plot, echo=FALSE}
 plot(rd_weekday_plot)
@@ -545,7 +545,7 @@ rd_dayhour_plot <- ggplot(rd_dayhour, aes(dayhour, count, fill = member_casual))
   facet_wrap(~member_casual)
 ```
 
-#### Figure 4 {#figure4}
+### Figure 4 {#figure4}
 
 ```{r rd_dayhour_plot, echo=FALSE}
 plot(rd_dayhour_plot)
@@ -560,19 +560,19 @@ rd_rideable_plot <- ggplot(rd_rideable_type, aes(member_casual, count, fill = ri
   labs(title = "The number of rides by type of vehicle", x = "Type of vehicle", y = "Number of rides")
 ```
 
-#### Figure 5 {#figure5}
+### Figure 5 {#figure5}
 
 ```{r rd_rideable_plot, echo=FALSE}
 plot(rd_rideable_plot)
 ```
 
 
-#### Figure 6 {#figure6}
+### Figure 6 {#figure6}
 
 ![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/start_station.png) 
 _figure build with [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticstartstationusage/Sheet1)_
 
-#### Figure 7 {#figure7}
+### Figure 7 {#figure7}
 
 ![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/end_station.png)
 _figure build with [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticendstationsusage/Sheet1)_
@@ -591,7 +591,7 @@ mean_duration_plot <- ggplot(rd_duration, aes(x='', y=mean, fill=member_casual))
   labs(x= "", y= "", title = "Distribution of Mean Duration by User Type")
 ```
 
-#### Figure 8 {#figure8}
+### Figure 8 {#figure8}
 
 ```{r mean_duration_plot, echo=FALSE}
 plot(mean_duration_plot)
@@ -611,7 +611,7 @@ median_duration_plot <- ggplot(rd_duration, aes(x='', y=median, fill=member_casu
   labs(x= "", y= "", title = "Distribution of Median Duration by User Type")
 ```
 
-#### Figure 9 {#figure9}
+### Figure 9 {#figure9}
 
 ```{r median_duration_plot, echo=FALSE}
 plot(median_duration_plot)
@@ -625,7 +625,7 @@ median_month_plot <- ggplot(duration_month, aes(month, median, fill = member_cas
   labs(title = "The median ride duration by month", x = "Month", y = "Median")
 ```
 
-#### Figure 10 {#figure10}
+### Figure 10 {#figure10}
 
 ```{r median_month_plot, echo=FALSE}
 plot(median_month_plot)
@@ -640,7 +640,7 @@ median_weekday_plot <- ggplot(duration_weekday, aes(weekday, median, fill = memb
   labs(title = "The median ride duration by days", x = "Days of the Week", y = "Median")
 ```
 
-#### Figure 11 {#figure11}
+### Figure 11 {#figure11}
 
 ```{r median_weekday_plot, echo=FALSE}
 plot(median_weekday_plot)
@@ -655,7 +655,7 @@ median_dayhour_plot <- ggplot(duration_dayhour, aes(dayhour, median, fill = memb
   labs(title = "The median ride duration by hours", x = "Hour of the Day", y = "Median")
 ```
 
-#### Figure 12 {#figure12}
+### Figure 12 {#figure12}
 
 ```{r median_dayhour_plot, echo=FALSE}
 plot(median_dayhour_plot)
