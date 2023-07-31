@@ -933,7 +933,7 @@ pie <- ggplot(rd_usertype, aes(x='', y=part_rides, fill=member_casual))+
   labs(x= "", y= "", title = "Distribution of Rides by User Type")
 ```
 
-### Figure 1
+### Figure 1 {#figure1}
 
 ![](Cyclistic_report_files/figure-markdown_github/pie-1.png)
 
@@ -945,7 +945,7 @@ rd_month_plot <- ggplot(rd_month, aes(month, count, fill = member_casual)) +
   labs(title = "The number of rides by month", x = "Month", y = "Number of rides")
 ```
 
-### Figure 2
+### Figure 2  {#figure2}
 
 ![](Cyclistic_report_files/figure-markdown_github/rd_month_plot-1.png)
 
@@ -958,7 +958,7 @@ rd_weekday_plot <- ggplot(rd_weekday, aes(weekday, count, fill = member_casual))
   facet_wrap(~member_casual)
 ```
 
-### Figure 3
+### Figure 3  {#figure3}
 
 ![](Cyclistic_report_files/figure-markdown_github/rd_weekday_plot-1.png)
 
@@ -971,7 +971,7 @@ rd_dayhour_plot <- ggplot(rd_dayhour, aes(dayhour, count, fill = member_casual))
   facet_wrap(~member_casual)
 ```
 
-### Figure 4
+### Figure 4  {#figure4}
 
 ![](Cyclistic_report_files/figure-markdown_github/rd_dayhour_plot-1.png)
 
@@ -983,17 +983,17 @@ rd_rideable_plot <- ggplot(rd_rideable_type, aes(member_casual, count, fill = ri
   labs(title = "The number of rides by type of vehicle", x = "Type of vehicle", y = "Number of rides")
 ```
 
-### Figure 5
+### Figure 5  {#figure5}
 
 ![](Cyclistic_report_files/figure-markdown_github/rd_rideable_plot-1.png)
 
-### Figure 6
+### Figure 6  {#figure6}
 
 ![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/start_station.png)
 *figure build with
 [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticstartstationusage/Sheet1)*
 
-### Figure 7
+### Figure 7  {#figure7}
 
 ![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/end_station.png)
 *figure build with
@@ -1013,7 +1013,7 @@ mean_duration_plot <- ggplot(rd_duration, aes(x='', y=mean, fill=member_casual))
   labs(x= "", y= "", title = "Distribution of Mean Duration by User Type")
 ```
 
-### Figure 8
+### Figure 8  {#figure8}
 
 ![](Cyclistic_report_files/figure-markdown_github/mean_duration_plot-1.png)
 
@@ -1031,7 +1031,7 @@ median_duration_plot <- ggplot(rd_duration, aes(x='', y=median, fill=member_casu
   labs(x= "", y= "", title = "Distribution of Median Duration by User Type")
 ```
 
-### Figure 9
+### Figure 9 {#figure9}
 
 ![](Cyclistic_report_files/figure-markdown_github/median_duration_plot-1.png)
 
@@ -1043,7 +1043,7 @@ median_month_plot <- ggplot(duration_month, aes(month, median, fill = member_cas
   labs(title = "The median ride duration by month", x = "Month", y = "Median")
 ```
 
-### Figure 10
+### Figure 10 {#figure10}
 
 ![](Cyclistic_report_files/figure-markdown_github/median_month_plot-1.png)
 
@@ -1055,7 +1055,7 @@ median_weekday_plot <- ggplot(duration_weekday, aes(weekday, median, fill = memb
   labs(title = "The median ride duration by days", x = "Days of the Week", y = "Median")
 ```
 
-### Figure 11
+### Figure 11 {#figure11}
 
 ![](Cyclistic_report_files/figure-markdown_github/median_weekday_plot-1.png)
 
@@ -1067,7 +1067,7 @@ median_dayhour_plot <- ggplot(duration_dayhour, aes(dayhour, median, fill = memb
   labs(title = "The median ride duration by hours", x = "Hour of the Day", y = "Median")
 ```
 
-<a name="#figure12">Figure 12</a>
+### Figure 12 {#figure12}
 
 ![](Cyclistic_report_files/figure-markdown_github/median_dayhour_plot-1.png)
 
