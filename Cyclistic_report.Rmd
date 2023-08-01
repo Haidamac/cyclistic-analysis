@@ -570,12 +570,12 @@ plot(rd_rideable_plot)
 ### Figure 6 {#figure6}
 
 ![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/start_station.png) 
-_figure build with [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticstartstationusage/Sheet1)_
+_figure was built using [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticstartstationusage/Sheet1)_
 
 ### Figure 7 {#figure7}
 
 ![](https://raw.githubusercontent.com/Haidamac/cyclistic-analysis/main/Maps/end_station.png)
-_figure build with [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticendstationsusage/Sheet1)_
+_figure was built using [Tableau](https://public.tableau.com/app/profile/serge.krynytsia/viz/Cyclisticendstationsusage/Sheet1)_
 
 
 **Distribution of ride mean duration by user types**
